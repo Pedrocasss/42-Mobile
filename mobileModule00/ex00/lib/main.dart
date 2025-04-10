@@ -46,7 +46,6 @@ class MyHomePage extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                // Ação ao clicar; sem necessidade de _incrementCounter
                 debugPrint('Button pressed');
               },
               child: const Text('Click me'),

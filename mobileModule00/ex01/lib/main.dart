@@ -28,9 +28,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String containerText = 'A simple text';
+
+  void changeText() {
+    setState(() {
+      containerText = containerText == 'A simple text' ? 'Hello World!' : 'A simple text';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -41,15 +50,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Colors.deepPurple,
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              child: const Text(
-                'A simple text',
-                style: TextStyle(fontSize: 30, color: Colors.white),
+              child: Text(
+                containerText, // Usa a variável de estado aqui
+                style: const TextStyle(fontSize: 30, color: Colors.white),
               ),
             ),
             ElevatedButton(
-              onPressed: () {
-                debugPrint('Button pressed');
-              },
+              onPressed: changeText, // Chama a função changeText quando pressionado
               child: const Text('Click me'),
             ),
           ],

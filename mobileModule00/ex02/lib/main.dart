@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:ex02/main.dart';
+
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+final List <String> Lista = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', 'AC', 'C', '=', '+', '-', '*', '/'];
+const Color myColor = Color(0xFF8F00FF);
+class MyApp extends StatelessWidget
+{
   const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final ColorScheme baseScheme = ColorScheme.fromSeed(seedColor: myColor, brightness: Brightness.light);
+    final ColorScheme scheme = baseScheme.copyWith(primary: myColor, onPrimary: Colors.white);
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -28,14 +34,17 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: scheme,
+        primaryColor: myColor,
+        appBarTheme: AppBarTheme(backgroundColor: scheme.primary, foregroundColor: scheme.onPrimary)
       ),
       home: const MyHomePage(title: 'Calculator'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatefulWidget
+{
   const MyHomePage({super.key, required this.title});
 
   // This widget is the home page of your application. It is stateful, meaning
@@ -55,7 +64,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -75,17 +83,106 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+    final cs = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         // TRY THIS: Try changing the color here to a specific color (to
         // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
         // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: cs.primary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
+      body: Column(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Container(
+              color: Colors.grey[300],
+              padding: const EdgeInsets.all(16.0),
+              width: double.infinity,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  TextField(
+                    readOnly: true,
+                    controller: TextEditingController(text: '0'),
+                    textAlign: TextAlign.right,
+                    style: const TextStyle(fontSize: 28, color: Colors.black),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                    ),
+                  ),
+                  TextField(
+                    readOnly: true,
+                    controller: TextEditingController(text: '0'),
+                    textAlign: TextAlign.right,
+                    style: const TextStyle(fontSize: 28, color: Colors.black),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                    ),
+
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: LayoutBuilder(
+
+              builder: (context, constraints) {
+
+                final height = constraints.maxHeight;
+                final width = constraints.maxWidth;
+                const crossAxisCount = 5;
+                final rowCount = (Lista.length / crossAxisCount).ceil();
+                final buttonHeight = height / rowCount;
+                final buttonWidth = width / crossAxisCount;
+                final aspectRatio = buttonWidth / buttonHeight;
+
+                return Container(
+                  color: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 1,
+                    vertical: 1,
+                  ),
+                  child: GridView.count(
+                    crossAxisCount: crossAxisCount,
+                    childAspectRatio: aspectRatio,
+                    mainAxisSpacing: 4,
+                    crossAxisSpacing: 4,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: List.generate(Lista.length, (index) {
+                      return ElevatedButton(
+                        onPressed: () {
+                          print('button pressed ${Lista[index]}');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: myColor,
+                          foregroundColor: Colors.white,
+                          textStyle: const TextStyle(fontSize: 22),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(Lista[index]),
+                        ),
+                      );
+                    }),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+
+
     );
   }
 }
